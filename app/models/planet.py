@@ -4,6 +4,14 @@ class Planet:
         self.name = name
         self.description = description
         self.signs_of_life = signs_of_life
+    
+    def get_dict(self):
+        return {
+            "id" : self.id,
+            "name" : self.name,
+            "description" : self.description,
+            "signs of life" : self.signs_of_life
+        }
 
 planets = [
     Planet(1, "HD 189773b", "rains glass side ways", False),

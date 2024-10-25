@@ -1,8 +1,18 @@
 from flask import Flask
-from .routes.routes import planet_bp
-#if using planets_path file for planets_bp it would look like the following
-#from .routes.planets_path import planet_bp
-def create_app(test_config=None):
+from .db import db, migrate
+from .models import planet
+from .routes.planets_routes import planet_bp
+
+def create_app():
     app = Flask(__name__)
+
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:postgres@localhost:5432/solar_system_development'
+
+    db.init_app(app)
+    migrate.init_app(app, db)
+
     app.register_blueprint(planet_bp)
+
     return app
+

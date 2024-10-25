@@ -7,7 +7,7 @@ class Planet(db.Model):
     description: Mapped[str]
     signs_of_life: Mapped[bool]
 
-    def get_dict(self):
+    def to_dict(self):
             return {
                 "id": self.id,
                 "name": self.name,

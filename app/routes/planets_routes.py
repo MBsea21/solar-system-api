@@ -30,5 +30,5 @@ def get_planets():
     query = db.select(Planet).order_by(Planet.id)
     planets = db.session.scalars(query)
 
-    planets_response = [planet.get_dict() for planet in planets]
+    planets_response = [planet.to_dict() for planet in planets]
     return planets_response

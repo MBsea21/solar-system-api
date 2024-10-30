@@ -25,9 +25,44 @@ def create_planet():
     return response, 201
 
 
+# create description query and name query and signs of life query
+# create order by (sort) query
+# test the requests
+
+
+
 @planet_bp.get("")
 def get_planets():
-    query = db.select(Planet).order_by(Planet.id)
+
+    query = db.select(Planet)
+
+    name_param = request.args.get("name")
+    if name_param:
+        print(name_param)
+        query = query.where(Planet.name.ilike(f"%{name_param}%"))
+        print(query)
+
+    
+    description_param = request.args.get("description")
+    if description_param:
+        query = query.where(Planet.description.ilike(f"%{description_param}%"))
+
+    life_param = request.args.get("signs of life")
+    if life_param:
+        query = query.where(Planet.signs_of_life.ilike(f"%{life_param}%"))
+
+    sort_param = request.args.get("sort")
+    print(type(sort_param))
+    print(type(Planet.name))
+    if sort_param == "name":
+        query = query.order_by(Planet.name)
+    elif sort_param == "description":
+        query = query.order_by(Planet.description)
+    elif sort_param == "signs of life":
+        query = query.order_by(Planet.signs_of_life)
+    else:
+        query = query.order_by(Planet.id)
+
     planets = db.session.scalars(query)
 
     planets_response = [planet.to_dict() for planet in planets]

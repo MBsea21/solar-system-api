@@ -7,6 +7,14 @@ class Planet(db.Model):
     description: Mapped[str]
     signs_of_life: Mapped[bool]
 
+    @classmethod
+    def from_dict(cls, planet_data):
+          new_planet = Planet(
+                name=planet_data["name"],
+                description=planet_data["description"],
+                signs_of_life=planet_data["signs of life"]
+                )
+
     def to_dict(self):
             return {
                 "id": self.id,

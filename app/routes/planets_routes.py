@@ -7,20 +7,12 @@ planet_bp = Blueprint("planet_bp", __name__, url_prefix="/planets")
 @planet_bp.post("")
 def create_planet():
     request_body = request.get_json()
-    name = request_body["name"]
-    description = request_body["description"]
-    signs_of_life = request_body["signs of life"]
+    new_planet = Planet.from_dict(request_body)
 
-    new_planet = Planet(name=name, description=description, signs_of_life=signs_of_life)
     db.session.add(new_planet)
     db.session.commit()
 
-    response = {
-        "id": new_planet.id,
-        "name": new_planet.name,
-        "description": new_planet.description,
-        "signs of life": new_planet.signs_of_life
-    }
+    response = new_planet.to_dict()
 
     return response, 201
 
@@ -42,7 +34,6 @@ def get_planets():
         query = query.where(Planet.name.ilike(f"%{name_param}%"))
         print(query)
 
-    
     description_param = request.args.get("description")
     if description_param:
         query = query.where(Planet.description.ilike(f"%{description_param}%"))
@@ -54,6 +45,8 @@ def get_planets():
     sort_param = request.args.get("sort")
     print(type(sort_param))
     print(type(Planet.name))
+
+
     if sort_param == "name":
         query = query.order_by(Planet.name)
     elif sort_param == "description":
@@ -72,12 +65,7 @@ def get_planets():
 def get_one_planet(planet_id):
     planet = validate_planet(planet_id)
     response = planet.to_dict()
-    # response = {
-    #     "id": planet.id,
-    #     "name": planet.name,
-    #     "description": planet.description,
-    #     "signs of life": planet.signs_of_life 
-    # }
+
     return response
 
 

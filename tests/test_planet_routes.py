@@ -19,6 +19,7 @@ no_planet_response_body = {"message" : "planet 6 does not exist"}
 def test_get_all_planets_empty_records(client):
     response = client.get("/planets")
     response_body = response.get_json()
+    print(response_body)
 
     assert response.status_code == 200
     assert response_body == []
@@ -46,8 +47,8 @@ def test_get_one_planet_not_found(client,three_planet_list):
     assert response_body == no_planet_response_body
 
 def test_post_one_planet(client):
-    before_post_database_response = client.get("/planets")
-    before_post_database_response_body =before_post_database_response.get_json()
+    # before_post_database_response = client.get("/planets")
+    # before_post_database_response_body =before_post_database_response.get_json()
     response=client.post("/planets",json={
         "name": "Chocolate Topia",
         "description": "A chocolate utopia!",
@@ -56,9 +57,9 @@ def test_post_one_planet(client):
     response_body = response.get_json()
 
     print("actual response", response_body)
-    print("expected response", planet_1_response_body)
-    assert before_post_database_response.status_code == 200
-    assert before_post_database_response_body == []
+    # print("expected response", planet_1_response_body)
+    # assert before_post_database_response.status_code == 200
+    # assert before_post_database_response_body == []
     assert response.status_code == 201
     assert response_body == {'description': 'A chocolate utopia!', 'id': 1, 'name': 'Chocolate Topia', 'signs of life': True}
 

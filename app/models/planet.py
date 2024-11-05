@@ -14,6 +14,7 @@ class Planet(db.Model):
                 description=planet_data["description"],
                 signs_of_life=planet_data["signs of life"]
                 )
+          return new_planet
 
     def to_dict(self):
             return {

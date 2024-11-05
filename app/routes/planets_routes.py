@@ -1,26 +1,15 @@
 from flask import Blueprint, abort, make_response, request, Response
 from ..models.planet import Planet
 from ..db import db
+from ..routes.route_utilities import validate_model as validate_planet, create_model
 
 planet_bp = Blueprint("planet_bp", __name__, url_prefix="/planets")
 
 @planet_bp.post("")
 def create_planet():
     request_body = request.get_json()
-    new_planet = Planet.from_dict(request_body)
 
-    db.session.add(new_planet)
-    db.session.commit()
-
-    response = new_planet.to_dict()
-
-    return response, 201
-
-
-# create description query and name query and signs of life query
-# create order by (sort) query
-# test the requests
-
+    return create_model(Planet, request_body)
 
 
 @planet_bp.get("")
@@ -63,33 +52,13 @@ def get_planets():
 
 @planet_bp.get("/<planet_id>")
 def get_one_planet(planet_id):
-    planet = validate_planet(planet_id)
-    response = planet.to_dict()
-
-    return response
-
-
-
-
-def validate_planet(planet_id):
-    try:
-        planet_id = int(planet_id)
-    except: 
-        response = ({"message": f"planet {planet_id} invalid"},400)
-        abort(make_response(response))
+    planet = validate_planet(Planet, planet_id)
     
-    query = db.select(Planet).where(Planet.id == planet_id)
-    planet = db.session.scalar(query)
-
-    if not planet:
-        response = ({"message" : f"planet {planet_id} does not exist"}, 404)
-        abort(make_response(response))
-
     return planet
 
 @planet_bp.put("/<planet_id>")
 def update_planet(planet_id):
-    planet = validate_planet(planet_id)
+    planet = validate_planet(Planet, planet_id)
     request_body = request.get_json()
 
     planet.name = request_body["name"]
@@ -102,7 +71,7 @@ def update_planet(planet_id):
 
 @planet_bp.delete("/<planet_id>")
 def delete_planet(planet_id):
-    planet = validate_planet(planet_id)
+    planet = validate_planet(Planet, planet_id)
 
     db.session.delete(planet)
     db.session.commit()

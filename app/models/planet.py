@@ -9,11 +9,12 @@ class Planet(db.Model):
 
     @classmethod
     def from_dict(cls, planet_data):
-          new_planet = Planet(
+        new_planet = Planet(
                 name=planet_data["name"],
                 description=planet_data["description"],
                 signs_of_life=planet_data["signs of life"]
                 )
+        return new_planet
 
     def to_dict(self):
             return {
